@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "519591014738",
+    "firebase_url": "https://culturapp-46760.firebaseio.com",
+    "project_id": "culturapp-46760",
+    "storage_bucket": "culturapp-46760.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519591014738:android:ab09a5b8bde2a545cd8a8b",
+        "android_client_info": {
+          "package_name": "piii.app.culturapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519591014738-nkv1u1k4n11mn1pff0dsn6hmjmmd4sl4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "piii.app.culturapp",
+            "certificate_hash": "d3a12939a3b2e37284a3204e126e6f214f5f21f9"
+          }
+        },
+        {
+          "client_id": "519591014738-pl334mspmea1gmnteoj3coaf3a0tlpu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2Y0V9gmWZ0Q7hfpd0aVc-xJWm6-Ex60Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519591014738-pl334mspmea1gmnteoj3coaf3a0tlpu5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
