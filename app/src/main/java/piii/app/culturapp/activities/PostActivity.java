@@ -13,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,12 +25,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
 import piii.app.culturapp.R;
+import piii.app.culturapp.providers.ImageProvider;
 import piii.app.culturapp.utils.FileUtil;
 
 public class PostActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -40,6 +44,8 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
     ImageView mImageViewPost1;
     private final int GALLERY_REQUEST_CODE = 1;
     File mImageFile;
+    Button mButtonPost;
+    ImageProvider mImageProvider;
 
 
     @Override
@@ -47,6 +53,7 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+        mImageProvider = new ImageProvider();
         mImageViewPost1 = findViewById(R.id.imageViewPost1);
         mImageViewPost1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,8 +62,28 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mButtonPost = findViewById(R.id.buttonPost);
+        mButtonPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveImage();
+            }
+        });
         fetchLastLocation();
 
+    }
+
+    private void saveImage() {
+        mImageProvider.save(PostActivity.this, mImageFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(PostActivity.this,"La imagen se almacenó correctamente", Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(PostActivity.this,"Se presentó un error al almacenar la imagen", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void openGallery() {

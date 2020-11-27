@@ -159,7 +159,7 @@
             android:paddingRight="14dp">
 
             <Button
-                android:id="@+id/buttonSignup"
+                android:id="@+id/buttonPost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="25dp"
