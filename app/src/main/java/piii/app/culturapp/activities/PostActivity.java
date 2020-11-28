@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -65,6 +66,8 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
     AuthProvider mAuthProvider;
     AlertDialog mDialog;
     CircularImageView mCircleImageBack;
+    AlertDialog.Builder mBuilderSelector;
+    CharSequence options[];
 
 
     @Override
@@ -72,6 +75,9 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+        options = new CharSequence[]{"Imagen de galería", "Tomar Foto", "Quitar imagen"};
+        mBuilderSelector = new AlertDialog.Builder(this);
+        mBuilderSelector.setTitle("Selecciona una opción");
         mCircleImageBack = findViewById(R.id.circularReturnPostButton);
         mCircleImageBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,13 +98,15 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
         mImageViewPost1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery(GALLERY_REQUEST_CODE);
+                selectOptionImage(GALLERY_REQUEST_CODE);
+                //openGallery(GALLERY_REQUEST_CODE);
             }
         });
         mImageViewPost2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery(GALLERY_REQUEST_CODE_2);
+                selectOptionImage(GALLERY_REQUEST_CODE_2);
+                //openGallery(GALLERY_REQUEST_CODE_2);
             }
         });
 
@@ -112,6 +120,35 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         fetchLastLocation();
 
+    }
+
+    private void selectOptionImage(final int requestCode) {
+        mBuilderSelector.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    openGallery(requestCode);
+                } else if (which == 1) {
+                    takePhoto();
+                } else if (which == 2) {
+                    //Crear el método eliminar foto
+                    deleteImage();
+                }
+            }
+        });
+        mBuilderSelector.show();
+    }
+
+    private void deleteImage() {
+        /*mImageViewPost1.setImageResource(R.drawable.ic_baseline_camera_alt_300);
+        mImageViewPost2.setImageResource(R.drawable.ic_baseline_camera_alt_300);
+        mImageFile = null;
+        mImageFile2 = null;*/
+        Toast.makeText(this, "Seleccionó borrar imagen", Toast.LENGTH_SHORT).show();
+    }
+
+    private void takePhoto() {
+        Toast.makeText(this, "Seleccionó tomar foto", Toast.LENGTH_SHORT).show();
     }
 
     private void clickPost() {
