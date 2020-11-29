@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         loginGoogleButton = findViewById(R.id.buttonLoginGoogle);
         mAuthProvider = new AuthProvider();
         mUserProvider = new UserProvider();
-        mDialog = new SpotsDialog.Builder().setContext(this).setMessage("Espera un momento").build();
+        mDialog = new SpotsDialog.Builder().setContext(this).setMessage("Espera un momento").setCancelable(false).build();
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
