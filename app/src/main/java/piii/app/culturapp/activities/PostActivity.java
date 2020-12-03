@@ -169,7 +169,7 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             if (photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(PostActivity.this, "com.optic.socialmediagamer", photoFile);
+                Uri photoUri = FileProvider.getUriForFile(PostActivity.this, "piii.app.culturapp", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, PHOTO_REQUEST_CODE);
             }

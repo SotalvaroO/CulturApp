@@ -189,6 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                 mDialog.dismiss();
                 if (task.isSuccessful()) {
                     Intent goToMain = new Intent(LoginActivity.this, MainActivity.class);
+                    goToMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(goToMain);
                 } else {
                     Toast.makeText(LoginActivity.this, "Los datos ingresados no son correctos", Toast.LENGTH_LONG).show();
