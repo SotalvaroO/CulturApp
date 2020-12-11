@@ -47,7 +47,8 @@
                         android:id="@+id/imageViewPost1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_baseline_camera_alt_300" />
+                        android:src="@drawable/ic_baseline_camera_alt_300"
+                        android:scaleType="centerCrop"/>
 
                 </androidx.cardview.widget.CardView>
 
@@ -63,7 +64,8 @@
                         android:id="@+id/imageViewPost2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_baseline_camera_alt_300" />
+                        android:src="@drawable/ic_baseline_camera_alt_300"
+                        android:scaleType="centerCrop"/>
 
                 </androidx.cardview.widget.CardView>
 
