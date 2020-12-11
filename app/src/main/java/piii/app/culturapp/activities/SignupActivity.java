@@ -14,12 +14,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,7 +115,7 @@ public class SignupActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             mDialog.dismiss();
                             if (task.isSuccessful()) {
-                                Intent goToMain = new Intent(SignupActivity.this, MainActivity.class);
+                                Intent goToMain = new Intent(SignupActivity.this, HomeActivity.class);
                                 goToMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(goToMain);
                             } else {

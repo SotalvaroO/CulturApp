@@ -22,15 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 import piii.app.culturapp.R;
@@ -149,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     if (documentSnapshot.get("username") != null) {
                         mDialog.dismiss();
-                        Intent goToMain = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent goToMain = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(goToMain);
                     } else {
                         mDialog.dismiss();
@@ -188,7 +181,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 mDialog.dismiss();
                 if (task.isSuccessful()) {
-                    Intent goToMain = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent goToMain = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(goToMain);
                 } else {
                     Toast.makeText(LoginActivity.this, "Los datos ingresados no son correctos", Toast.LENGTH_LONG).show();
@@ -196,5 +189,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mAuthProvider.getUserSession() != null) {
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 }

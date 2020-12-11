@@ -16,5 +16,10 @@
         <item name="colorControlActivated">@color/colorWhite</item>
 
     </style>
+    
+    <style name="ToolbarName" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/colorWhite</item>
+        <item name="titleTextColor">@color/colorWhite</item>
+    </style>
 
 </resources>

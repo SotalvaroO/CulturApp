@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,7 +78,7 @@ public class CompleteUsernameActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 mDialog.dismiss();
                 if (task.isSuccessful()) {
-                    Intent goToMain = new Intent(CompleteUsernameActivity.this, MainActivity.class);
+                    Intent goToMain = new Intent(CompleteUsernameActivity.this, HomeActivity.class);
                     startActivity(goToMain);
                 } else {
                     Toast.makeText(CompleteUsernameActivity.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
