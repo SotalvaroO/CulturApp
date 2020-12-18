@@ -261,6 +261,7 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                 post.setTitle(mTitle);
                                                 post.setDescription(mDescription);
                                                 post.setIdUser(mAuthProvider.getUid());
+                                                post.setTimestamp(new Date().getTime());
                                                 mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> taskSave) {

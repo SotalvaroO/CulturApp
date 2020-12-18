@@ -9,13 +9,14 @@ public class Post {
     private String idUser;
     private String latitude;
     private String altitude;
+    private long timestamp;
     //Falta implementar la ubicación
 
     public Post(){
 
     }
 
-    public Post(String id, String title, String description, String image1, String image2, String idUser, String latitude, String altitude) {
+    public Post(String id, String title, String description, String image1, String image2, String idUser, String latitude, String altitude, long timestamp) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -24,6 +25,7 @@ public class Post {
         this.idUser = idUser;
         this.latitude = latitude;
         this.altitude = altitude;
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -88,5 +90,13 @@ public class Post {
 
     public void setAltitude(String altitude) {
         this.altitude = altitude;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }
