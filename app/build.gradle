@@ -63,5 +63,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     // FirebaseUI for Cloud Firestore
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
+    //Slider image
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
 }
 apply plugin: 'com.google.gms.google-services'

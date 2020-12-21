@@ -18,20 +18,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.PostDetailActivity"></activity>
 
         <provider
-            android:authorities="piii.app.culturapp"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="piii.app.culturapp"
             android:exported="false"
-            android:grantUriPermissions="true" >
-
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-
         </provider>
 
-        <activity android:name=".activities.EditProfileActivity"></activity>
+        <activity android:name=".activities.EditProfileActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
