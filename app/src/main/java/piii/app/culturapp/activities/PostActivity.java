@@ -257,6 +257,7 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                 String url2 = uri.toString();
                                                 Post post = new Post();
                                                 post.setImage1(url);
+                                                post.setId(mAuthProvider.getUid());
                                                 post.setImage2(url2);
                                                 post.setTitle(mTitle);
                                                 post.setDescription(mDescription);

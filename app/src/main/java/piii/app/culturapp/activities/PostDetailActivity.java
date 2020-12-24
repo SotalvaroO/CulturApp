@@ -1,12 +1,17 @@
 package piii.app.culturapp.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -14,10 +19,13 @@ import com.smarteist.autoimageslider.SliderView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import piii.app.culturapp.R;
 import piii.app.culturapp.adapters.SliderAdapter;
 import piii.app.culturapp.models.SliderItem;
+import piii.app.culturapp.providers.AuthProvider;
 import piii.app.culturapp.providers.PostProvider;
+import piii.app.culturapp.providers.UserProvider;
 
 public class PostDetailActivity extends AppCompatActivity {
 
@@ -25,13 +33,33 @@ public class PostDetailActivity extends AppCompatActivity {
     SliderAdapter mSliderAdapter;
     List<SliderItem> mSliderItems = new ArrayList<>();
     String mExtraPostId;
+
+
+    TextView mTextViewTitle;
+    TextView mTextViewDescription;
+    TextView mTextViewUsername;
+    TextView mTextViewPhone;
+    CircleImageView mCircleImageViewProfile;
+    Button mButtonShowProfile;
+
+    AuthProvider mAuthProvier;
     PostProvider mPostProvider;
+    UserProvider mUserProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detail);
         mSliderView = findViewById(R.id.imageSlider);
+
+        mTextViewTitle = findViewById(R.id.textViewTitle);
+        mTextViewDescription = findViewById(R.id.textViewDescription);
+        mTextViewUsername = findViewById(R.id.textViewUsername);
+        mTextViewPhone = findViewById(R.id.textViewPhone);
+        mCircleImageViewProfile = findViewById(R.id.circleImageProfile);
+        mButtonShowProfile = findViewById(R.id.bntShowProfile);
+
+        mAuthProvier = new AuthProvider();
         mPostProvider = new PostProvider();
 
         mExtraPostId = getIntent().getStringExtra("id");
@@ -53,9 +81,9 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     private void getPost() {
-        mPostProvider.getPostById(mExtraPostId).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mPostProvider.getPostRealTimeById(mExtraPostId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot.exists()) {
                     if (documentSnapshot.contains("image1")) {
                         String image1 = documentSnapshot.getString("image1");
@@ -69,9 +97,20 @@ public class PostDetailActivity extends AppCompatActivity {
                         item.setImageUrl(image2);
                         mSliderItems.add(item);
                     }
+                    if (documentSnapshot.contains("title")) {
+                        String title = documentSnapshot.getString("title");
+                        mTextViewTitle.setText(title);
+                    }
+                    if (documentSnapshot.contains("description")) {
+                        String description = documentSnapshot.getString("description");
+                        mTextViewDescription.setText(description);
+                    }
+
                     instanceSlide();
                 }
             }
         });
     }
+
+
 }
