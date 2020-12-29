@@ -172,7 +172,8 @@
             android:layout_height="match_parent"
             android:gravity="bottom"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp">
+            android:paddingRight="14dp"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/buttonPost"

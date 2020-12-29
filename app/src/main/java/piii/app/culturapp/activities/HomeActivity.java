@@ -65,10 +65,10 @@ public class HomeActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    /*@Override
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         finishAffinity();
-    }*/
+    }
 
 }

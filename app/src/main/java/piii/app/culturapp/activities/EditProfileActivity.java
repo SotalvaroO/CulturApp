@@ -145,18 +145,18 @@ public class EditProfileActivity extends AppCompatActivity {
                         mPhone = documentSnapshot.getString("phone");
                         mTextInputPhone.setText(mPhone);
                     }
-                    if (documentSnapshot.contains("image_profile")){
+                    if (documentSnapshot.contains("image_profile")) {
                         mImageProfile = documentSnapshot.getString("image_profile");
-                        if (mImageProfile!=null){
-                            if (!mImageProfile.isEmpty()){
+                        if (mImageProfile != null) {
+                            if (!mImageProfile.isEmpty()) {
                                 Picasso.with(EditProfileActivity.this).load(mImageProfile).into(mCircleImageViewProfile);
                             }
                         }
                     }
-                    if (documentSnapshot.contains("image_cover")){
+                    if (documentSnapshot.contains("image_cover")) {
                         mImageCover = documentSnapshot.getString("image_cover");
-                        if (mImageCover!=null){
-                            if (!mImageCover.isEmpty()){
+                        if (mImageCover != null) {
+                            if (!mImageCover.isEmpty()) {
                                 Picasso.with(EditProfileActivity.this).load(mImageCover).into(mImageViewCover);
                             }
                         }
@@ -169,10 +169,13 @@ public class EditProfileActivity extends AppCompatActivity {
     private void clickEditProfile() {
         mUsername = mTextInputUsername.getText().toString();
         mPhone = mTextInputPhone.getText().toString();
-        if (!mUsername.isEmpty() && !mPhone.isEmpty()) {
+        if (!mUsername.isEmpty()) {
             if (mImageFile != null && mImageFile2 != null) {
                 //Ambas imágenes vienen de la galería
                 saveImage(mImageFile, mImageFile2);
+            }
+            if (mImageFile == null && mImageFile2 == null && mPhotoFile == null && mPhotoFile2 == null){
+                finish();
             }
             //Ambas imágenes vienen de la cámara
             else if (mPhotoFile != null && mPhotoFile2 != null) {
@@ -188,9 +191,9 @@ public class EditProfileActivity extends AppCompatActivity {
             } else if (mPhotoFile != null) {
                 saveOneImage(mPhotoFile, true);
             } else if (mImageFile != null) {
-                saveOneImage(mImageFile, false);
+                saveOneImage(mImageFile, true);
             } else if (mImageFile2 != null) {
-                saveOneImage(mImageFile2, true);
+                saveOneImage(mImageFile2, false);
             } else if (mPhotoFile2 != null) {
                 saveOneImage(mPhotoFile2, false);
             } else {
@@ -221,8 +224,8 @@ public class EditProfileActivity extends AppCompatActivity {
                                     if (taskImage2.isSuccessful()) {
                                         mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
-                                            public void onSuccess(Uri uri) {
-                                                String urlCover = uri.toString();
+                                            public void onSuccess(Uri uri2) {
+                                                String urlCover = uri2.toString();
                                                 User user = new User();
                                                 user.setUsername(mUsername);
                                                 user.setPhone(mPhone);
@@ -295,6 +298,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 mDialog.dismiss();
                 if (task.isSuccessful()) {
                     Toast.makeText(EditProfileActivity.this, "La información se actualizó correctamente", Toast.LENGTH_LONG).show();
+                    finish();
                 } else {
                     Toast.makeText(EditProfileActivity.this, "La información no se pudo actualizar", Toast.LENGTH_SHORT).show();
                 }
