@@ -65,5 +65,6 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
     //Slider image
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
+    //f
 }
 apply plugin: 'com.google.gms.google-services'

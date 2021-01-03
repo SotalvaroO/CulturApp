@@ -5,18 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import piii.app.culturapp.R;
 import piii.app.culturapp.fragments.ChatFragment;
-import piii.app.culturapp.fragments.FilterFragment;
+import piii.app.culturapp.fragments.MapsFragment;
 import piii.app.culturapp.fragments.HomeFragment;
 import piii.app.culturapp.fragments.ProfileFragment;
 
@@ -44,8 +41,8 @@ public class HomeActivity extends AppCompatActivity {
                         case R.id.itemHome:
                             openFragment(HomeFragment.newInstance("", ""));
                             return true;
-                        case R.id.itemFilters:
-                            openFragment(FilterFragment.newInstance("", ""));
+                        case R.id.itemMaps:
+                            openFragment(MapsFragment.newInstance("", ""));
                             return true;
                         case R.id.itemChat:
                             openFragment(ChatFragment.newInstance("", ""));

@@ -32,6 +32,7 @@ public class PostProvider {
     public Task<DocumentSnapshot> getPostById(String id){
         return mCollection.document(id).get();
     }
+
     public DocumentReference getPostRealTimeById(String id){
         return mCollection.document(id);
     }
