@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,9 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import piii.app.culturapp.R;
 import piii.app.culturapp.activities.LoginActivity;
 import piii.app.culturapp.providers.AuthProvider;
+import piii.app.culturapp.providers.PostProvider;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +47,8 @@ public class MapsFragment extends Fragment {
     private String mParam2;
 
     Toolbar mToolbar;
+
+    PostProvider mPostProvider;
 
     AuthProvider mAuthProvider;
 
@@ -79,18 +91,21 @@ public class MapsFragment extends Fragment {
 
         // Inflate the layout for this fragment
         mToolbar = mView.findViewById(R.id.toolbar);
-        mAuthProvider= new AuthProvider();
+        mAuthProvider = new AuthProvider();
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Mapa");
         setHasOptionsMenu(true);
+
+        mPostProvider = new PostProvider();
+        getDocuments();
 
         return mView;
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu,menu);
+        inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -105,8 +120,25 @@ public class MapsFragment extends Fragment {
     private void logout() {
         mAuthProvider.logout();
         Intent goToLogin = new Intent(getContext(), LoginActivity.class);
-        goToLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        goToLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(goToLogin);
+    }
+
+    public void getDocuments() {
+        mPostProvider.getDocuments().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> list = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(document.getId());
+                    }
+                    Log.d("TAG", list.toString());
+                }else {
+                    Log.d("fffff", "onComplete: ",task.getException());
+                }
+            }
+        });
     }
 
 }

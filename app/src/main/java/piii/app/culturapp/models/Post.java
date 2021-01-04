@@ -8,7 +8,7 @@ public class Post {
     private String image2;
     private String idUser;
     private long timestamp;
-    private Location location;
+    private Location location;  
     //Falta implementar la ubicación
 
     public Post() {

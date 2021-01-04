@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import piii.app.culturapp.models.Post;
 
@@ -35,5 +36,9 @@ public class PostProvider {
 
     public DocumentReference getPostRealTimeById(String id){
         return mCollection.document(id);
+    }
+
+    public Task<QuerySnapshot> getDocuments(){
+        return mCollection.get();
     }
 }
