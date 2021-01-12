@@ -136,7 +136,8 @@ public class EditProfileActivity extends AppCompatActivity {
         mUserProvider.getRealTimeUsers(mAuthProvider.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                if (documentSnapshot.exists()) {
+                Log.e("Error", "Firebase Ex ", error);
+                if (documentSnapshot.exists() && documentSnapshot != null) {
                     if (documentSnapshot.contains("username")) {
                         mUsername = documentSnapshot.getString("username");
                         mTextInputUsername.setText(mUsername);
@@ -174,7 +175,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 //Ambas imágenes vienen de la galería
                 saveImage(mImageFile, mImageFile2);
             }
-            if (mImageFile == null && mImageFile2 == null && mPhotoFile == null && mPhotoFile2 == null){
+            if (mImageFile == null && mImageFile2 == null && mPhotoFile == null && mPhotoFile2 == null) {
                 finish();
             }
             //Ambas imágenes vienen de la cámara

@@ -46,6 +46,33 @@
                     android:layout_marginRight="15dp"
                     android:src="@drawable/ic_baseline_chat_40" />
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="35dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewRelativeTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hace 0 min"
+                        android:textColor="@color/colorWhite"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewLikes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Me Gusta"
+                        android:textColor="@color/colorWhite"
+                        android:textStyle="italic" />
+
+                </LinearLayout>
+
             </FrameLayout>
 
             <androidx.cardview.widget.CardView
@@ -205,9 +232,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="15dp"
+                android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewComments"

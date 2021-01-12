@@ -14,31 +14,36 @@ public class PostProvider {
 
     CollectionReference mCollection;
 
-    public PostProvider(){
+    public PostProvider() {
         mCollection = FirebaseFirestore.getInstance().collection("Post");
     }
 
-    public Task<Void> save(Post post){
+    public Task<Void> save(Post post) {
         return mCollection.document().set(post);
     }
 
     public Query getAll() {
-        return mCollection.orderBy("title", Query.Direction.DESCENDING);
+        return mCollection.orderBy("timestamp", Query.Direction.DESCENDING);
     }
 
-    public Query getPostByUser(String id){
-        return mCollection.whereEqualTo("idUser",id);
+    public Query getPostByUser(String id) {
+        return mCollection.whereEqualTo("idUser", id);
     }
 
-    public Task<DocumentSnapshot> getPostById(String id){
+    public Task<DocumentSnapshot> getPostById(String id) {
         return mCollection.document(id).get();
     }
 
-    public DocumentReference getPostRealTimeById(String id){
+    public DocumentReference getPostRealTimeById(String id) {
         return mCollection.document(id);
     }
 
-    public Task<QuerySnapshot> getDocuments(){
+    public Task<QuerySnapshot> getDocuments() {
         return mCollection.get();
     }
+
+    public DocumentReference getObject(String id){
+        return mCollection.document(id);
+    }
+
 }

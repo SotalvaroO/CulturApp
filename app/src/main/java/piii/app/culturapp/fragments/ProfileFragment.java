@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,8 +128,9 @@ public class ProfileFragment extends Fragment {
         mPostProvider.getPostByUser(mAuthProvider.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                int numberPost= queryDocumentSnapshots.size();
-                mTextViewPostNumber .setText(String.valueOf(numberPost));
+                Log.e("Error", "Firebase Ex ", error);
+                int numberPost = queryDocumentSnapshots.size();
+                mTextViewPostNumber.setText(String.valueOf(numberPost));
             }
         });
     }
@@ -137,7 +139,8 @@ public class ProfileFragment extends Fragment {
         mUserProvider.getRealTimeUsers(mAuthProvider.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                if (documentSnapshot.exists()) {
+                Log.e("Error", "Firebase Ex ", error);
+                if (documentSnapshot.exists() && documentSnapshot != null) {
                     if (documentSnapshot.contains("email")) {
                         String email = documentSnapshot.getString("email");
                         mTextViewEmail.setText(email);

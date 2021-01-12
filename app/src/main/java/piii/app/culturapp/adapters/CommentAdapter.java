@@ -40,26 +40,26 @@ public class CommentAdapter extends FirestoreRecyclerAdapter<Comment, CommentAda
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Comment comment) {
         DocumentSnapshot document = getSnapshots().getSnapshot(position);
-        final String commentId= document.getId();
+        final String commentId = document.getId();
         String idUser = document.getString("idUser");
-        getUserInfo(idUser,holder);
+        getUserInfo(idUser, holder);
         holder.textViewComment.setText(comment.getComment());
 
     }
 
-    private void getUserInfo(String idUser, final ViewHolder holder){
+    private void getUserInfo(String idUser, final ViewHolder holder) {
         mUserProvider.getRealTimeUsers(idUser).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                if (documentSnapshot.exists()){
-                    if (documentSnapshot.contains("username")){
+                if (documentSnapshot.exists() && documentSnapshot != null) {
+                    if (documentSnapshot.contains("username")) {
                         String username = documentSnapshot.getString("username");
                         holder.textViewUsername.setText(username);
                     }
-                    if (documentSnapshot.contains("image_profile")){
+                    if (documentSnapshot.contains("image_profile")) {
                         String imageProfile = documentSnapshot.getString("image_profile");
-                        if (imageProfile!=null){
-                            if (!imageProfile.isEmpty()){
+                        if (imageProfile != null) {
+                            if (!imageProfile.isEmpty()) {
                                 Picasso.with(context).load(imageProfile).into(holder.circleImageViewComment);
                             }
                         }

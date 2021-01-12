@@ -8,7 +8,7 @@
     <include layout="@layout/action_bar_toolbar" />
 
     <fragment
-        android:id="@+id/google_maps"
+        android:id="@+id/google_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

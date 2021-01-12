@@ -3,13 +3,16 @@ package piii.app.culturapp.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +23,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,11 +45,9 @@ import java.util.Date;
 
 import dmax.dialog.SpotsDialog;
 import piii.app.culturapp.R;
-import piii.app.culturapp.models.Location;
 import piii.app.culturapp.models.Post;
 import piii.app.culturapp.providers.AuthProvider;
 import piii.app.culturapp.providers.ImageProvider;
-import piii.app.culturapp.providers.LocationProvider;
 import piii.app.culturapp.providers.PostProvider;
 import piii.app.culturapp.utils.FileUtil;
 
@@ -69,11 +72,12 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
     String mTitle = "";
     String mDescription = "";
     AuthProvider mAuthProvider;
-    LocationProvider mLocationProvider;
     AlertDialog mDialog;
     CircularImageView mCircleImageBack;
     AlertDialog.Builder mBuilderSelector;
     CharSequence options[];
+
+    FusedLocationProviderClient fusedLocationProviderClient;
 
     //Foto1
     String mAbsolutePhotoPath;
@@ -104,10 +108,11 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
         mDialog = new SpotsDialog.Builder().setContext(this).setMessage("Espera un momento").setCancelable(false).build();
         mAuthProvider = new AuthProvider();
         mPostProvider = new PostProvider();
-        mLocationProvider = new LocationProvider(this);
         mTextInputTitle = findViewById(R.id.titleInput);
         mTextInputDescription = findViewById(R.id.descriptionInput);
         mImageProvider = new ImageProvider();
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         mExtraPostId = getIntent().getStringExtra("id");
 
@@ -258,10 +263,6 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
                                             public void onSuccess(Uri uri) {
                                                 String url2 = uri.toString();
                                                 Post post = new Post();
-                                                Location location = new Location();
-                                                location.setLongitude(currentLocation.getLongitude());
-                                                location.setAltitude(currentLocation.getAltitude());
-                                                location.setLatitude(currentLocation.getLatitude());
 
                                                 post.setImage1(url);
                                                 post.setImage2(url2);
@@ -269,7 +270,8 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                 post.setDescription(mDescription);
                                                 post.setIdUser(mAuthProvider.getUid());
                                                 post.setTimestamp(new Date().getTime());
-                                                post.setLocation(location);
+                                                post.setLatitude(String.valueOf(currentLocation.getLatitude()));
+                                                post.setLongitude(String.valueOf(currentLocation.getLongitude()));
                                                 mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> taskSave) {
@@ -355,12 +357,24 @@ public class PostActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void fetchLastLocation() {
-        mLocationProvider.getCurrentLocation(this).addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onSuccess(android.location.Location location) {
+            public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "  " + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_maps);
                     supportMapFragment.getMapAsync(PostActivity.this);
                 }

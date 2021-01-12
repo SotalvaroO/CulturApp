@@ -1,4 +1,4 @@
-package piii.app.culturapp.activities;
+ package piii.app.culturapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -48,8 +49,10 @@ import piii.app.culturapp.models.Post;
 import piii.app.culturapp.models.SliderItem;
 import piii.app.culturapp.providers.AuthProvider;
 import piii.app.culturapp.providers.CommentProvider;
+import piii.app.culturapp.providers.LikeProvider;
 import piii.app.culturapp.providers.PostProvider;
 import piii.app.culturapp.providers.UserProvider;
+import piii.app.culturapp.utils.RelativeTime;
 
 public class PostDetailActivity extends AppCompatActivity {
 
@@ -64,6 +67,8 @@ public class PostDetailActivity extends AppCompatActivity {
     TextView mTextViewDescription;
     TextView mTextViewUsername;
     TextView mTextViewPhone;
+    TextView mTextViewRelativeTime;
+    TextView mTextViewLikes;
     CircleImageView mCircleImageViewProfile;
     Button mButtonShowProfile;
     CircularImageView mCircularBackButton;
@@ -74,6 +79,7 @@ public class PostDetailActivity extends AppCompatActivity {
     PostProvider mPostProvider;
     UserProvider mUserProvider;
     CommentProvider mCommentProvider;
+    LikeProvider mLikeProvider;
 
     CommentAdapter mAdapter;
 
@@ -87,6 +93,8 @@ public class PostDetailActivity extends AppCompatActivity {
         mTextViewDescription = findViewById(R.id.textViewDescription);
         mTextViewUsername = findViewById(R.id.textViewUsername);
         mTextViewPhone = findViewById(R.id.textViewPhone);
+        mTextViewRelativeTime = findViewById(R.id.textViewRelativeTime);
+        mTextViewLikes = findViewById(R.id.textViewLikes);
         mCircleImageViewProfile = findViewById(R.id.circleImageProfile);
         mButtonShowProfile = findViewById(R.id.bntShowProfile);
         mCircularBackButton = findViewById(R.id.circularReturnPostDetailButton);
@@ -107,6 +115,7 @@ public class PostDetailActivity extends AppCompatActivity {
         mAuthProvider = new AuthProvider();
         mPostProvider = new PostProvider();
         mCommentProvider = new CommentProvider();
+        mLikeProvider = new LikeProvider();
 
         mExtraPostId = getIntent().getStringExtra("id");
 
@@ -119,6 +128,7 @@ public class PostDetailActivity extends AppCompatActivity {
         });
 
         getPost();
+        getNumberOfLikes();
         mButtonShowProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +136,16 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void getNumberOfLikes() {
+        mLikeProvider.getLiekesByPost(mExtraPostId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                int numberLikes=queryDocumentSnapshots.size();
+                mTextViewLikes.setText(String.valueOf(numberLikes+" Me Gusta"));
+            }
+        });
     }
 
     @Override
@@ -259,6 +279,11 @@ public class PostDetailActivity extends AppCompatActivity {
                     if (documentSnapshot.contains("idUser")) {
                         mIdUser = documentSnapshot.getString("idUser");
                         getUserInfo(mIdUser);
+                    }
+                    if (documentSnapshot.contains("timestamp")) {
+                        long timestamp = documentSnapshot.getLong("timestamp");
+                        String relativeTime= RelativeTime.getTimeAgo(timestamp,PostDetailActivity.this);
+                        mTextViewRelativeTime.setText(relativeTime);
                     }
 
                     instanceSlide();

@@ -8,14 +8,15 @@ public class Post {
     private String image2;
     private String idUser;
     private long timestamp;
-    private Location location;  
+    private String latitude;
+    private String longitude;
     //Falta implementar la ubicación
 
     public Post() {
 
     }
 
-    public Post(String id, String title, String description, String image1, String image2, String idUser, long timestamp, Location location) {
+    public Post(String id, String title, String description, String image1, String image2, String idUser, long timestamp, String latitude, String longitude) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -23,7 +24,8 @@ public class Post {
         this.image2 = image2;
         this.idUser = idUser;
         this.timestamp = timestamp;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude=longitude;
     }
 
     public String getId() {
@@ -82,11 +84,19 @@ public class Post {
         this.timestamp = timestamp;
     }
 
-    public Location getLocation() {
-        return location;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }
