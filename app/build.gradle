@@ -66,5 +66,7 @@ dependencies {
     //Slider image
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
     //f
+    //SearchBar
+    implementation 'com.github.mancj:MaterialSearchBar:0.7.5'
 }
 apply plugin: 'com.google.gms.google-services'
