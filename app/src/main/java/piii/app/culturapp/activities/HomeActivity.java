@@ -16,11 +16,15 @@ import piii.app.culturapp.fragments.ChatFragment;
 import piii.app.culturapp.fragments.MapsFragment;
 import piii.app.culturapp.fragments.HomeFragment;
 import piii.app.culturapp.fragments.ProfileFragment;
+import piii.app.culturapp.providers.AuthProvider;
+import piii.app.culturapp.providers.TokenProvider;
 
 public class HomeActivity extends AppCompatActivity {
 
     TextView textViewHelloWorld;
     BottomNavigationView bottomNavigation;
+    TokenProvider mTokenProvider;
+    AuthProvider mAuthProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +32,12 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
-        openFragment(HomeFragment.newInstance("", ""));
+        mTokenProvider = new TokenProvider();
+        mAuthProvider = new AuthProvider();
 
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        openFragment(HomeFragment.newInstance("", ""));
+        createToken();
     }
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
@@ -66,6 +73,10 @@ public class HomeActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finishAffinity();
+    }
+
+    private void createToken(){
+        mTokenProvider.create(mAuthProvider.getUid());
     }
 
 }
