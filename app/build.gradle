@@ -71,5 +71,11 @@ dependencies {
     // Declare the dependencies for the Firebase Cloud Messaging and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-messaging:21.0.1'
+    //gson
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    //Scalars
+    implementation 'com.squareup.retrofit2:converter-scalars:'
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 }
 apply plugin: 'com.google.gms.google-services'

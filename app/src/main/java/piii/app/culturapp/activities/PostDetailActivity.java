@@ -1,4 +1,4 @@
- package piii.app.culturapp.activities;
+package piii.app.culturapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,7 +38,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import piii.app.culturapp.R;
@@ -45,14 +48,21 @@ import piii.app.culturapp.adapters.CommentAdapter;
 import piii.app.culturapp.adapters.PostsAdapter;
 import piii.app.culturapp.adapters.SliderAdapter;
 import piii.app.culturapp.models.Comment;
+import piii.app.culturapp.models.FCMBody;
+import piii.app.culturapp.models.FCMResponse;
 import piii.app.culturapp.models.Post;
 import piii.app.culturapp.models.SliderItem;
 import piii.app.culturapp.providers.AuthProvider;
 import piii.app.culturapp.providers.CommentProvider;
 import piii.app.culturapp.providers.LikeProvider;
+import piii.app.culturapp.providers.NotificationProvider;
 import piii.app.culturapp.providers.PostProvider;
+import piii.app.culturapp.providers.TokenProvider;
 import piii.app.culturapp.providers.UserProvider;
 import piii.app.culturapp.utils.RelativeTime;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostDetailActivity extends AppCompatActivity {
 
@@ -80,6 +90,8 @@ public class PostDetailActivity extends AppCompatActivity {
     UserProvider mUserProvider;
     CommentProvider mCommentProvider;
     LikeProvider mLikeProvider;
+    NotificationProvider mNotification;
+    TokenProvider mTokenProvider;
 
     CommentAdapter mAdapter;
 
@@ -116,6 +128,8 @@ public class PostDetailActivity extends AppCompatActivity {
         mPostProvider = new PostProvider();
         mCommentProvider = new CommentProvider();
         mLikeProvider = new LikeProvider();
+        mNotification = new NotificationProvider();
+        mTokenProvider = new TokenProvider();
 
         mExtraPostId = getIntent().getStringExtra("id");
 
@@ -142,8 +156,8 @@ public class PostDetailActivity extends AppCompatActivity {
         mLikeProvider.getLiekesByPost(mExtraPostId).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                int numberLikes=queryDocumentSnapshots.size();
-                mTextViewLikes.setText(String.valueOf(numberLikes+" Me Gusta"));
+                int numberLikes = queryDocumentSnapshots.size();
+                mTextViewLikes.setText(String.valueOf(numberLikes + " Me Gusta"));
             }
         });
     }
@@ -210,7 +224,7 @@ public class PostDetailActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void createComment(String value) {
+    private void createComment(final String value) {
         Comment comment = new Comment();
         comment.setComment(value);
         comment.setIdPost(mExtraPostId);
@@ -220,9 +234,51 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+                    sendNotification(value);
                     Toast.makeText(PostDetailActivity.this, "El comentario se creo exitósamente", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(PostDetailActivity.this, "No se pudo crear el comentario", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void sendNotification(final String comment) {
+        if (mIdUser == null) {
+            return;
+        }
+        mTokenProvider.getToken(mIdUser).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    if (documentSnapshot.contains("token")){
+                        String token = documentSnapshot.getString("token");
+                        Map<String,String> data = new HashMap<>();
+                        data.put("tittle","NUEVO COMENTARIO");
+                        data.put("body",comment);
+                        FCMBody body = new FCMBody(token,"high","4500s",data);
+                        mNotification.sendNotification(body).enqueue(new Callback<FCMResponse>() {
+                            @Override
+                            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                                if (response.body()!=null){
+                                    if (response.body().getSuccess()==1){
+                                        Toast.makeText(PostDetailActivity.this, "La notificacion se envió", Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        Toast.makeText(PostDetailActivity.this, "La notificacion se envió", Toast.LENGTH_SHORT).show();
+                                    }
+                                }else {
+                                    Toast.makeText(PostDetailActivity.this, "La notificacion se envió", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<FCMResponse> call, Throwable t) {
+
+                            }
+                        });
+                    }
+                }else {
+                    Toast.makeText(PostDetailActivity.this, "El token de usuario no existe", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -282,7 +338,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     }
                     if (documentSnapshot.contains("timestamp")) {
                         long timestamp = documentSnapshot.getLong("timestamp");
-                        String relativeTime= RelativeTime.getTimeAgo(timestamp,PostDetailActivity.this);
+                        String relativeTime = RelativeTime.getTimeAgo(timestamp, PostDetailActivity.this);
                         mTextViewRelativeTime.setText(relativeTime);
                     }
 
