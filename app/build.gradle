@@ -74,7 +74,7 @@ dependencies {
     //gson
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     //Scalars
-    implementation 'com.squareup.retrofit2:converter-scalars:'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.4.0'
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 }

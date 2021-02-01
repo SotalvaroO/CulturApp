@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 
@@ -93,6 +94,7 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
             }
         });
         mRecyclerView = mView.findViewById(R.id.recyclerViewHome);
+        ListenerRegistration mListener;
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);

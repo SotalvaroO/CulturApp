@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -35,6 +38,7 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView mTextViewEmail;
     TextView mTextViewPostNumber;
     TextView mTextViewPostExist;
+    FloatingActionButton mFabChat;
 
     ImageView mImageViewCover;
     CircleImageView mCircleImageViewProfile;
@@ -59,6 +63,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mTextViewPhone = findViewById(R.id.textViewProfilePhone);
         mTextViewPostNumber = findViewById(R.id.textViewProfilePostNumber);
         mTextViewPostExist = findViewById(R.id.textViewPostExist);
+        mFabChat = findViewById(R.id.fabChat);
 
         mImageViewCover = findViewById(R.id.imageViewProfileCover);
         mCircleImageViewProfile = findViewById(R.id.circleImageViewProfile);
@@ -81,11 +86,28 @@ public class UserProfileActivity extends AppCompatActivity {
         mPostProvider = new PostProvider();
 
         mExtraIdUser = getIntent().getStringExtra("idUser");
+        if (mAuthProvider.getUid().equals(mExtraIdUser)) {
+            mFabChat.hide();
+        }
+
+        mFabChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToChatActivity();
+            }
+        });
 
         checkIfPostExist();
         getUser();
         getPostNumber();
 
+    }
+
+    private void goToChatActivity() {
+        Intent intent = new Intent(UserProfileActivity.this, ChatActivity.class);
+        intent.putExtra("idUser1", mAuthProvider.getUid());
+        intent.putExtra("idUser2", mExtraIdUser);
+        startActivity(intent);
     }
 
     @Override
@@ -111,11 +133,11 @@ public class UserProfileActivity extends AppCompatActivity {
         mPostProvider.getPostByUser(mExtraIdUser).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                int numberPost= queryDocumentSnapshots.size();
-                if (numberPost>0){
+                int numberPost = queryDocumentSnapshots.size();
+                if (numberPost > 0) {
                     mTextViewPostExist.setText("Publicaciones");
                     mTextViewPostExist.setTextColor(Color.BLACK);
-                }else {
+                } else {
                     mTextViewPostExist.setText("No hay publicaciones");
                     mTextViewPostExist.setTextColor(Color.GRAY);
                 }
@@ -127,8 +149,8 @@ public class UserProfileActivity extends AppCompatActivity {
         mPostProvider.getPostByUser(mExtraIdUser).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                int numberPost= queryDocumentSnapshots.size();
-                mTextViewPostNumber .setText(String.valueOf(numberPost));
+                int numberPost = queryDocumentSnapshots.size();
+                mTextViewPostNumber.setText(String.valueOf(numberPost));
             }
         });
     }
